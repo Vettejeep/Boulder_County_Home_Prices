@@ -14,6 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Data for this project may be the property of the Boulder County Assessor's office,
+# they gave me free access as a student but were not clear about any restrictions about 
+# sharing the URL from which the data was downloaded.
+# The data has been pre-processed from xlsx to csv files because OpenOffice had 
+# problems with the xlsx files.
+# Data was pre-processed by a data setup script, Assemble_Data.py which produced the
+# file '$working_data_other_areas.csv'
+
 import pandas as pd
 import numpy as np
 from math import sqrt
@@ -27,7 +35,7 @@ from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
 from sklearn.ensemble import GradientBoostingRegressor, AdaBoostRegressor
 
 
-working_df = pd.read_csv('Data\\$working_data_other_Areas.csv')
+working_df = pd.read_csv('Data\\$working_data_other_areas.csv')
 
 working_df = working_df[working_df['Age_Yrs'] > 0]
 working_df = working_df[working_df['totalActualVal'] <= 2000000]
