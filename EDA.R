@@ -1,3 +1,27 @@
+# Exploratory Data Analysis in R
+# Copyright (C) 2017  Kevin Maher
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Data for this project may be the property of the Boulder County Assessor's office,
+# they gave me free access as a student but were not clear about any restrictions regarding
+# sharing the URL from which the data was downloaded.
+# The data has been pre-processed from xlsx to csv files because OpenOffice had
+# problems with the xlsx files.
+# Data was pre-processed by a data setup script, Assemble_Data.py which produced the
+# file '$working_data_5c.csv'
+
 rm(list = ls())
 library(ggplot2)
 # http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
