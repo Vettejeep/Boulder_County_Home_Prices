@@ -46,74 +46,80 @@ import xgboost as xgb
 def mean_absolute_percentage_error(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 
-working_df = pd.read_csv('Data\\$working_data_5c.csv')
 
-working_df = working_df[working_df['Age_Yrs'] > 0]
-working_df = working_df[working_df['totalActualVal'] <= 2000000]
+def run():
+    working_df = pd.read_csv('Data\\$working_data_5c.csv')
 
-print working_df.head()
+    working_df = working_df[working_df['Age_Yrs'] > 0]
+    working_df = working_df[working_df['totalActualVal'] <= 2000000]
+    # working_df['totalActualVal_Sq'] = working_df['totalActualVal'] ** 2
 
-# root mean squared error, on log of price - per Kaggle
-# https://www.kaggle.com/c/house-prices-advanced-regression-techniques#evaluation
-y = np.log(working_df['price'])
-X = working_df.drop(labels=['price'], axis=1)  # , 'totalActualVal'
+    print working_df.head()
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=245)
+    # root mean squared error, on log of price - per Kaggle
+    # https://www.kaggle.com/c/house-prices-advanced-regression-techniques#evaluation
+    y = np.log(working_df['price'])
+    X = working_df.drop(labels=['price'], axis=1)  # , 'totalActualVal'
 
-sc = StandardScaler()
-sc.fit(X_train)
-trainX = sc.transform(X_train)
-testX = sc.transform(X_test)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=245)
 
-# reg = LinearRegression()
-# reg = Lasso(alpha=0.01, max_iter=5000)
-# reg = BayesianRidge(n_iter=1000)
-# reg = SVR()  # poor performance
-# reg = MLPRegressor(hidden_layer_sizes=(300, 50), activation='logistic', max_iter=20000)  # poor performance
-# reg = Perceptron(n_iter=500)  # crashes
-# reg = HuberRegressor(epsilon=5, max_iter=1000)  # mediocre performance
-# reg = RandomForestRegressor(n_estimators=1000, n_jobs=3, random_state=42)
-# reg = GradientBoostingRegressor(learning_rate=0.02,
-#                                             n_estimators=2000,
-#                                             max_depth=6,
-#                                             subsample=0.6,
-#                                             max_features='auto',
-#                                             random_state=42)
-# reg = ExtraTreesRegressor(n_estimators=1000, n_jobs=3)
-reg = xgb.XGBRegressor(learning_rate=0.075,
-                                max_depth=6,
-                                min_child_weight=1.0,
-                                subsample=1.0,
-                                colsample_bytree=0.4,
-                                colsample_bylevel=0.8,
-                                reg_lambda=1.0,
-                                reg_alpha=0,
-                                gamma=0,
-                                n_estimators=700,
-                                seed=42,
-                                silent=1)
+    sc = StandardScaler()
+    sc.fit(X_train)
+    trainX = sc.transform(X_train)
+    testX = sc.transform(X_test)
 
-print 'Start CV'
-scores = cross_val_score(reg, X_train, y_train, cv=10, scoring='neg_mean_squared_error')
-print "Cross Validation RMSE: %.6f" % np.mean(np.sqrt(-scores))
+    reg = LinearRegression()
+    # reg = Lasso(alpha=0.01, max_iter=5000)
+    # reg = BayesianRidge(n_iter=1000)
+    # reg = SVR()  # poor performance
+    # reg = MLPRegressor(hidden_layer_sizes=(300, 50), activation='logistic', max_iter=20000)  # poor performance
+    # reg = Perceptron(n_iter=500)  # crashes
+    # reg = HuberRegressor(epsilon=5, max_iter=1000)  # mediocre performance
+    # reg = RandomForestRegressor(n_estimators=1000, n_jobs=3, random_state=42)
+    # reg = GradientBoostingRegressor(learning_rate=0.02,
+    #                                             n_estimators=2000,
+    #                                             max_depth=6,
+    #                                             subsample=0.6,
+    #                                             max_features='auto',
+    #                                             random_state=42)
+    # reg = ExtraTreesRegressor(n_estimators=1000, n_jobs=3)
+    # reg = xgb.XGBRegressor(learning_rate=0.075,
+    #                                 max_depth=6,
+    #                                 min_child_weight=1.0,
+    #                                 subsample=1.0,
+    #                                 colsample_bytree=0.4,
+    #                                 colsample_bylevel=0.8,
+    #                                 reg_lambda=1.0,
+    #                                 reg_alpha=0,
+    #                                 gamma=0,
+    #                                 n_estimators=700,
+    #                                 seed=42,
+    #                                 silent=1)
 
-print 'Start Training'
-reg.fit(X_train, y_train)
-pred = reg.predict(X_test)
+    print 'Start CV'
+    scores = cross_val_score(reg, X_train, y_train, cv=10, scoring='neg_mean_squared_error', n_jobs=-1)
+    print "Cross Validation RMSE: %.6f" % np.mean(np.sqrt(-scores))
 
-rmse = sqrt(mean_squared_error(y_test, pred))
-print "Model RMSE on 30%% Test Data: %.6f" % rmse
+    print 'Start Training'
+    reg.fit(X_train, y_train)
+    pred = reg.predict(X_test)
 
-gradient, intercept, r_value, p_value, std_err = stats.linregress(np.exp(y_test), np.exp(pred))
-print 'Gradient: %.4f' % gradient
-print 'R Value: %.4f' % r_value
-print 'R-Squared: %.4f' % r_value ** 2
+    rmse = sqrt(mean_squared_error(y_test, pred))
+    print "Model RMSE on 30%% Test Data: %.6f" % rmse
 
-# adjusted R-squared - https://www.easycalculation.com/statistics/learn-adjustedr2.php
-r_sq_adj = 1 - ((1 - r_value ** 2) * (len(y_test) - 1) / (len(y_test) - X_train.shape[1] - 1))
-print 'R-Squared Adjusted: %.4f' % r_sq_adj
+    gradient, intercept, r_value, p_value, std_err = stats.linregress(np.exp(pred), np.exp(y_test))
+    print 'Gradient: %.4f' % gradient
+    print 'R Value: %.4f' % r_value
+    print 'R-Squared: %.4f' % r_value ** 2
 
-mape = mean_absolute_percentage_error(np.exp(y_test), np.exp(pred))
-print 'MAPE: %.4f' % mape
+    # adjusted R-squared - https://www.easycalculation.com/statistics/learn-adjustedr2.php
+    r_sq_adj = 1 - ((1 - r_value ** 2) * (len(y_test) - 1) / (len(y_test) - X_train.shape[1] - 1))
+    print 'R-Squared Adjusted: %.4f' % r_sq_adj
 
-print 'Done'
+    mape = mean_absolute_percentage_error(np.exp(y_test), np.exp(pred))
+    print 'MAPE: %.4f' % mape
+
+    print 'Done'
+
+if __name__ == '__main__':
+    run()
