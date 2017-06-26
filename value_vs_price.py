@@ -41,6 +41,8 @@ def mean_absolute_percentage_error(y_true, y_pred):
 
 working_df = pd.read_csv('Data\\$working_data_5c.csv')
 
+# eliminate some outliers, homes above an estimated value of $2 million are especially difficult to model
+# with the available data
 working_df = working_df[working_df['Age_Yrs'] > 0]
 working_df = working_df[working_df['totalActualVal'] <= 2000000]
 
@@ -48,6 +50,7 @@ y = working_df['price']
 columns = working_df.columns[2:]
 X = working_df.drop(columns, axis=1)  # , 'totalActualVal'
 X = X.drop(labels=['price'], axis=1)
+# 70/30 split of data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=245)
 
 # determine metrics
@@ -64,11 +67,11 @@ print 'R-Squared Adjusted: %.4f' % r_sq_adj
 mape = mean_absolute_percentage_error(y_test, X_test['totalActualVal'])
 print 'MAPE: %.4f' % mape
 
-# plot with regression line
+# plot with regression lines, one for actual data, one to represent ideal answer
 z = np.polyfit(X_test['totalActualVal'], y_test, 1)
 print 'z'
 print z
-y_poly = [z[0] * x + z[1] for x in range(0, 3100000, 100000)]
+y_poly = [z[0] * x + z[1] for x in range(int(intercept), 3100000 + int(intercept), 100000)]
 x_poly = [x for x in range(0, 3100000, 100000)]
 y_perfect = [x for x in range(0, 3100000, 100000)]
 

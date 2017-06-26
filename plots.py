@@ -34,6 +34,7 @@ working_df = working_df[working_df['totalActualVal'] <= 2000000]
 
 # y = working_df['price']
 # X = working_df.drop(labels=['price'], axis=1)
+# 70/30 split of data into training and test sets
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=245)
 
 # x_val = X_test['TotalFinishedSF']
@@ -42,6 +43,7 @@ working_df = working_df[working_df['totalActualVal'] <= 2000000]
 # print 'Max, X axis: %.2f' % np.max(x_val)
 # print 'Min, X axis: %.2f' % np.min(x_val)
 #
+# plot home size vs price
 # plt.figure(0)
 # plt.plot(x_val, y_price, ".")
 # plt.xlim(0, 7000)
@@ -58,6 +60,7 @@ working_df = working_df[working_df['totalActualVal'] <= 2000000]
 # print 'Max, X axis: %.2f' % np.max(x_val)
 # print 'Min, X axis: %.2f' % np.min(x_val)
 #
+# plot lot vs. price
 # plt.figure(0)
 # plt.plot(x_val, y_price, ".")
 # plt.xlim(0, 100000)
@@ -73,6 +76,7 @@ Age_Median_Price = Age_Median_Price[:60]
 print Age_Median_Price
 age = [x for x in range(1, 61)]
 
+# plot age vs. price
 # plt.figure(0)
 # plt.plot(age, Age_Median_Price, "-")
 # plt.xlim(0, 60)
@@ -100,6 +104,7 @@ Age_Count = Age_Count[:60]
 median_home_size_by_year = working_df['TotalFinishedSF'].groupby(working_df['Age_Yrs']).median()
 median_home_size_by_year = median_home_size_by_year[:60]
 
+# check median size by year
 # plt.figure(2)
 # plt.plot(age, median_home_size_by_year, "-")
 # plt.xlim(0, 60)
@@ -119,6 +124,8 @@ Age_Median_Price = Age_Median_Price[:60]
 print Age_Median_Price
 age = [x for x in range(1, 61)]
 
+# plot effective age vs. price
+# effective age is age since last remodel
 # plt.figure(3)
 # plt.plot(age, Age_Median_Price, "-")
 # plt.xlim(0, 60)
@@ -133,6 +140,7 @@ age = [x for x in range(1, 61)]
 main_floor_sf = working_df['mainfloorSF']
 price = working_df['price']
 
+# plot main floor size vs price
 # plt.figure(4)
 # plt.plot(main_floor_sf, price, ".")
 # plt.xlim(0, 6000)
@@ -147,6 +155,7 @@ price = working_df['price']
 # basement_sf = working_df['bsmtSF']
 # price = working_df['price']
 #
+# plot basement size vs. price
 # plt.figure(5)
 # plt.plot(basement_sf, price, ".")
 # plt.xlim(0, 5000)

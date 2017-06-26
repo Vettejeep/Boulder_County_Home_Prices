@@ -24,16 +24,16 @@
 import pandas as pd
 
 # get rid of mobile homes and not arms length transactions
-
 df = pd.read_csv('Data\\2013_2016_Sales.csv')
 df['strap'] = df['strap'].apply(lambda x: x.rstrip())
 df['Real_Prop'] = df['strap'].apply(lambda x: 1 if x[0] == 'R' else 0)
-df = df[df['Real_Prop'] == 1]
-df = df[df['sales_cd'] == 'Q']
+df = df[df['Real_Prop'] == 1]  # homes are real property, strip out other sales
+df = df[df['sales_cd'] == 'Q']  # 'Q' is believed to be arms length transaction per the assessor
 
 df.reset_index(drop=True, inplace=True)
 print 'Length: %d' % len(df.index)
 
+# strip out year and month
 df['Year'] = df['Tdate'].apply(lambda x: int(x[1:5]))
 df['Month'] = df['Tdate'].apply(lambda x: int(x[6:8]))
 

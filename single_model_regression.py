@@ -47,9 +47,12 @@ def mean_absolute_percentage_error(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 
 
+# run function solves problems with multi-core usage in cross validation
 def run():
     working_df = pd.read_csv('Data\\$working_data_5c.csv')
 
+	# eliminate some outliers, homes above an estimated value of $2 million are especially difficult to model
+	# with the available data
     working_df = working_df[working_df['Age_Yrs'] > 0]
     working_df = working_df[working_df['totalActualVal'] <= 2000000]
     # working_df['totalActualVal_Sq'] = working_df['totalActualVal'] ** 2
@@ -61,6 +64,7 @@ def run():
     y = np.log(working_df['price'])
     X = working_df.drop(labels=['price'], axis=1)  # , 'totalActualVal'
 
+	# 70/30 split of data into training and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=245)
 
     sc = StandardScaler()
@@ -68,6 +72,7 @@ def run():
     trainX = sc.transform(X_train)
     testX = sc.transform(X_test)
 
+	# comment/uncomment to try different regressors
     reg = LinearRegression()
     # reg = Lasso(alpha=0.01, max_iter=5000)
     # reg = BayesianRidge(n_iter=1000)

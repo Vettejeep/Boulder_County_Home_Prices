@@ -40,13 +40,17 @@ def mean_absolute_percentage_error(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 
 
+# get working data from Assemble_Data.py, data is ready for machine learning
 working_df = pd.read_csv('Data\\$working_data_5c.csv')  # was 3b
 
+# eliminate some outliers, homes above an estimated value of $2 million are especially difficult to model
+# with the available data
 working_df = working_df[working_df['Age_Yrs'] > 0]
 working_df = working_df[working_df['totalActualVal'] <= 2000000]
 
 print working_df.head()
 
+# verfiy pre-processing
 if working_df.isnull().any().any():
     print 'WARNING: NA values in dataframe!!!'
 
@@ -58,6 +62,7 @@ X = working_df.drop(labels=['price'], axis=1)  # , 'totalActualVal'
 print 'Total Data Points: %d' % len(X.index)
 print 'Shape of input data %s: ' % str(X.shape)
 
+# 70/30 split of data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=245)
 
 # reg1 = RandomForestRegressor(n_estimators=1000, n_jobs=3, random_state=42)  # better metrics without the RF
@@ -67,7 +72,7 @@ reg2 = GradientBoostingRegressor(learning_rate=0.02,
                                             subsample=0.6,
                                             max_features='auto',
                                             random_state=42)
-reg3 = ExtraTreesRegressor(n_estimators=1000, n_jobs=3)
+reg3 = ExtraTreesRegressor(n_estimators=1000, n_jobs=3, random_state=42)
 reg4 = xgb.XGBRegressor(learning_rate=0.075,
                                 max_depth=6,
                                 min_child_weight=1.0,

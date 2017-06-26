@@ -24,9 +24,11 @@
 import pandas as pd
 import numpy as np
 
+# read sales data, tells which homes sold in a given year
 YEARS = ['2013', '2014', '2015', '2016']
 sales_df = pd.read_csv('Data\\2013_2016_Sales_Clean.csv')
 
+# merge tables for assessed values, land, building, addresses
 for i, year in enumerate(YEARS):
     print 'Sales Year: %s' % year
     sales_year_df = sales_df[sales_df['Year'] == int(year)]
@@ -90,12 +92,13 @@ del land_df
 del bldg_df
 del addr_df
 
+# keep only single family homes
 all_data_df = all_data_df[all_data_df['landClassDscr'] == 'SINGLE FAM.RES.-LAND']
 all_data_df = all_data_df[all_data_df['bldgClassDscr'] == 'SINGLE FAM RES IMPROVEMENTS']
 
 print all_data_df['designCodeDscr'].unique()
 
-# leaving out condos, townhomes, model gets too big for computing resources
+# home_styles, leaving out condos, townhomes, model gets too big for computing resources
 home_styles = ['2 - 3 STORY',
                '1 STORY - RANCH',
                '1920-1939 STYLE',
@@ -111,7 +114,7 @@ home_styles = ['2 - 3 STORY',
 #                'PATIO HOMES', 'SPLIT LEVEL']  # , '1 STORY- TOWNHOUSE', 'MULTI STORY- TOWNHOUSE', 'PAIRED HOMES',
 all_data_df = all_data_df[all_data_df['designCodeDscr'].isin(home_styles)]
 
-# for now, keep only common deed types
+# keep only common deed types
 # http://stackoverflow.com/questions/17071871/select-rows-from-a-dataframe-based-on-values-in-a-column-in-pandas
 all_data_df['deed_type'] = all_data_df['deed_type'].apply(lambda x: x.strip())
 common_deed_types = ['RD', 'RJ', 'SJ', 'SW', 'WD', 'WJ']
@@ -125,7 +128,7 @@ all_data_df = all_data_df[all_data_df['city'] != 'GOLDEN']  # city is mostly out
 
 # all_data_df.to_csv('Data\\$all_data_df5c.csv')
 
-# add info from other areas table
+# add info from other areas table, decke. porches, patios, etc.
 all_data_df['Has_Deck'] = 0
 all_data_df['Deck_Area'] = 0
 all_data_df['Has_Encl_Porch'] = 0
@@ -150,6 +153,9 @@ year = 0
 area_dict = {}
 total_to_process = len(all_data_df.index)
 
+# merge in other areas table, runs slow, needs to create large dictionary
+# doing this without the dictionary looked like it would take many days to run
+# sort the data first by year or else wast much time re-building dictionaries for each year
 for i in all_data_df.index:
     new_year = all_data_df.loc[i, 'Year']
     strap = all_data_df.loc[i, 'strap']
@@ -235,11 +241,13 @@ working_df = all_data_df.loc[:, ['price',
                         'Has_Porch', 'Porch_Area', 'Has_Other_Area', 'Other_Area']]
 print working_df.head()
 
-working_df['Time_Period'] = ((all_data_df['Year'] - int(YEARS[0])) * 12) + all_data_df['Month']
-working_df['Age_Yrs'] = all_data_df['Year'] - all_data_df['builtYear']
-working_df['Effective_Age_Yrs'] = all_data_df['Year'] - all_data_df['EffectiveYear']
+working_df.loc[:, 'Time_Period'] = ((all_data_df['Year'] - int(YEARS[0])) * 12) + all_data_df['Month']
+working_df.loc[:, 'Age_Yrs'] = all_data_df['Year'] - all_data_df['builtYear']
+working_df.loc[:, 'Effective_Age_Yrs'] = all_data_df['Year'] - all_data_df['EffectiveYear']
 
 
+# converts and joins dummy variables to the model
+# source df should not equal dest df or else the categorical features remain in the model along with the dummies
 def get_dummies(source_df, dest_df, col, join=True, drop=None):
     dummies = pd.get_dummies(source_df[col], prefix=col)
 
@@ -247,6 +255,9 @@ def get_dummies(source_df, dest_df, col, join=True, drop=None):
     for col in dummies:
         print '%s: %d' % (col, np.sum(dummies[col]))
     print
+
+    if drop is not None:
+        dummies.drop([drop], inplace=True)
 
     if join:
         dest_df = dest_df.join(dummies)
@@ -392,5 +403,5 @@ print 'Shape, working df: %s' % str(working_df.shape)
 print 'Length, Working DF %s' % len(working_df.index)
 
 working_df.reset_index(drop=True, inplace=True)
-working_df.to_csv('Data\\$working_data_5c.csv', index=False)
+working_df.to_csv('Data\\$working_data_5jnk.csv', index=False)
 print 'Done, file saved'
