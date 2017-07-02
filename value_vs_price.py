@@ -1,4 +1,6 @@
 # Simply uses the assessors estimate to predict price, so we can see how much better the machine learning models are.
+# requires data from Assemble_Data.py
+
 # Copyright (C) 2017  Kevin Maher
 
 # This program is free software: you can redistribute it and/or modify
@@ -79,10 +81,16 @@ plt.figure(0)
 plt.plot(X_test, y_test, ".")
 plt.plot(x_poly, y_poly, "-")
 plt.plot(x_poly, y_perfect, "-")
-plt.xlim(0, 3000000)
-plt.ylim(0, 3000000)
+plt.xlim(0, 4000000)
+plt.ylim(0, 4000000)
 plt.xlabel("Est Price")
 plt.ylabel("Actual Price")
 plt.title("Estimated vs. Actual Sales Price")
 plt.show()
 plt.close()
+
+# delta_price = pd.Series((X_test['totalActualVal'] / y_test * 100.0) - 100.0)
+# delta_price.to_csv('Data\\delta_price_basic.csv', index=False)
+
+print 'min price, actual: %.2f' % np.min(y_test)
+print 'min price, assessor estimate: %.2f' % np.min(X_test['totalActualVal'])

@@ -1,5 +1,8 @@
 # Data Pre-processor to Analyze Boulder County Home Prices vs. Assessor's Data
 # Creates the working data frame with numeric and dummy variables
+
+# requires data from sales_clean.py
+
 # Copyright (C) 2017  Kevin Maher
 
 # This program is free software: you can redistribute it and/or modify
@@ -58,7 +61,7 @@ for i, year in enumerate(YEARS):
     bldg_df['strap'] = bldg_df['strap'].apply(lambda x: x.rstrip())
 
     try:
-        bldg_df.drop(['UnitCount'], axis=1, inplace=True)
+        bldg_df.drop(['UnitCount'], axis=1, inplace=True)  # fix issue where not all tables have this balue
     except:
         pass
 

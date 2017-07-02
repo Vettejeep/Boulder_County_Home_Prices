@@ -1,5 +1,8 @@
 # Model to Analyze Boulder County Home Prices vs. Assessor's Data
 # Produces a blended model, currently best with extra Trees, Gradient Boosting and XG Boost
+
+# requires data from Assemble_Data.py
+
 # Copyright (C) 2017  Kevin Maher
 
 # This program is free software: you can redistribute it and/or modify
@@ -51,8 +54,8 @@ working_df = pd.read_csv('Data\\$working_data_5c.csv')
 working_df = working_df[working_df['Age_Yrs'] > 0]
 working_df = working_df[working_df['totalActualVal'] <= 2000000]
 
+# verify the input data
 print working_df.head()
-
 if working_df.isnull().any().any():
     print 'WARNING: NA values in dataframe!!!'
 
@@ -67,6 +70,7 @@ print 'Shape of input data %s: ' % str(X.shape)
 # 70/30 split of data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=245)
 
+# set up the regressors
 # reg1 = RandomForestRegressor(n_estimators=1000, n_jobs=3, random_state=42)
 reg2 = GradientBoostingRegressor(learning_rate=0.02,
                                             n_estimators=2000,
@@ -110,6 +114,7 @@ for i, reg in enumerate(regs):
 
     preds[:, i] = pred
 
+# analyze blended model
 print 'Analyze Blended Model'
 pred = np.mean(preds, axis=1)
 rmse = sqrt(mean_squared_error(y_test, pred))
@@ -136,12 +141,15 @@ plt.figure(0)
 plt.plot(np.exp(pred), np.exp(y_test), ".")
 plt.plot(x_poly, y_poly, "-")
 plt.plot(x_poly, y_perfect, "-")
-plt.xlim(0, 3500000)
-plt.ylim(0, 3500000)
+plt.xlim(0, 4000000)
+plt.ylim(0, 4000000)
 plt.xlabel("Est Price")
 plt.ylabel("Actual Price")
 plt.title("Estimation of Sales Price")
 plt.show()
 plt.close()
+
+delta_price = pd.Series((np.exp(pred) / np.exp(y_test) * 100.0) - 100.0)
+delta_price.to_csv('Data\\delta_price.csv', index=False)
 
 print 'Done'

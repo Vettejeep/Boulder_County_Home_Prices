@@ -1,5 +1,8 @@
 # Data Pre-processor to Analyze Boulder County Home Prices vs. Assessor's Data
 # Creates a cleaned sales file for use by the assemble data script
+
+# requires data from sales table for years 2013-2016 in csv form, these were stacked manually using OpenOffice Calc
+
 # Copyright (C) 2017  Kevin Maher
 
 # This program is free software: you can redistribute it and/or modify

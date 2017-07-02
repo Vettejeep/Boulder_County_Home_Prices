@@ -39,7 +39,6 @@ working_df = working_df[working_df['totalActualVal'] <= 2000000]
 # 70/30 split of data into training and test sets
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=245)
 
-# finished sq ft vs price
 # x_val = X_test['TotalFinishedSF']
 # y_price = y_test
 #
@@ -57,7 +56,6 @@ working_df = working_df[working_df['totalActualVal'] <= 2000000]
 # plt.show()
 # plt.close()
 
-# lot size vs price
 # x_val = X_test['GIS_sqft']
 # y_price = y_test
 #
@@ -75,7 +73,6 @@ working_df = working_df[working_df['totalActualVal'] <= 2000000]
 # plt.show()
 # plt.close()
 
-# home median age vs price
 Age_Median_Price = working_df['price'].groupby(working_df['Age_Yrs']).median()
 Age_Median_Price = Age_Median_Price[:60]
 print Age_Median_Price
@@ -123,7 +120,7 @@ median_home_size_by_year = median_home_size_by_year[:60]
 print np.median(working_df['TotalFinishedSF'])
 print min(working_df['TotalFinishedSF'])
 
-# effective age in years vs price
+# effective age in years
 Age_Median_Price = working_df['price'].groupby(working_df['Effective_Age_Yrs']).median()
 Age_Median_Price = Age_Median_Price[:60]
 print Age_Median_Price
@@ -141,7 +138,7 @@ age = [x for x in range(1, 61)]
 # plt.show()
 # plt.close()
 
-# main floor sf vs price
+# main floor sf
 main_floor_sf = working_df['mainfloorSF']
 price = working_df['price']
 
@@ -156,7 +153,7 @@ price = working_df['price']
 # plt.show()
 # plt.close()
 
-# basement sf vs price
+# basement sf
 # basement_sf = working_df['bsmtSF']
 # price = working_df['price']
 #
@@ -170,5 +167,34 @@ price = working_df['price']
 # plt.title("Basement Sq. Ft. vs. Sales Price")
 # plt.show()
 # plt.close()
+
+
+delta_price = pd.read_csv('Data\\delta_price.csv')
+print delta_price.head()
+delta_price = pd.Series(delta_price.iloc[:, 0])
+
+plt.hist(delta_price, bins=32, alpha=0.5, label='Price Error Histogram')
+plt.xlabel("Percent Error")
+plt.ylabel("Count")
+plt.title("Histogram of Predicted Price Error - Final Model")
+plt.show()
+plt.close()
+
+print 'Standard Deviation of Percent Price Error, Final Model: %.4f' % np.std(delta_price)
+print 'Mean of Price Error, Final Model: %.4f' % np.mean(delta_price)
+
+delta_price = pd.read_csv('Data\\delta_price_basic.csv')
+print delta_price.head()
+delta_price = pd.Series(delta_price.iloc[:, 0])
+
+plt.hist(delta_price, bins=32, alpha=0.5, label='Price Error Histogram')
+plt.xlabel("Percent Error")
+plt.ylabel("Count")
+plt.title("Histogram of Price Error - Assessor's Valuation")
+plt.show()
+plt.close()
+
+print 'Standard Deviation of Percent Price Error, Assessor Estimate: %.4f' % np.std(delta_price)
+print 'Mean of Price Error, Assessor Estimate: %.4f' % np.mean(delta_price)
 
 print 'done'
