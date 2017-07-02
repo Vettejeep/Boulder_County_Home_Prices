@@ -1,17 +1,17 @@
 # Boulder County Home Prices
-##   Synoposis
-###     A machine learning model to predict the sales prices of Boulder County, CO
-###     home prices.  Uses data provided by the county assessor for 2013-2016.
+## &nbsp;&nbsp;Synoposis
+### &nbsp;&nbsp;&nbsp;&nbsp;A machine learning model to predict the sales prices of Boulder County, CO
+### &nbsp;&nbsp;&nbsp;&nbsp;home prices.  Uses data provided by the county assessor for 2013-2016.
 ### 
-##   Project for Regis University MSDS692, Data Science Practicum I
-###     Kevin Maher
-###     Vettejeep365@gmail.com
+## &nbsp;&nbsp;Project for Regis University MSDS692, Data Science Practicum I
+### &nbsp;&nbsp;&nbsp;&nbsp;Kevin Maher
+### &nbsp;&nbsp;&nbsp;&nbsp;Vettejeep365@gmail.com
 ###
-##   Project Files
-###     Kevin Maher MSDS692 Boulder Housing Report.pdf: Final Project Report
-###     MaherKevin.ppt: Final Project Presentation
-###     'py' and 'R' files: Project Code
+## &nbsp;&nbsp;Project Files
+### &nbsp;&nbsp;&nbsp;&nbsp;Kevin Maher MSDS692 Boulder Housing Report.pdf: Final Project Report
+### &nbsp;&nbsp;&nbsp;&nbsp;MaherKevin.ppt: Final Project Presentation
+### &nbsp;&nbsp;&nbsp;&nbsp;'py' and 'R' files: Project Code
 ###
-###     Note that the data can be provided to students for free by the assessor
-###     but since they charge comercial entities for the data, the raw data cannot
-###     be shared here.
+### &nbsp;&nbsp;&nbsp;&nbsp;Note that the data can be provided to students for free by the assessor
+### &nbsp;&nbsp;&nbsp;&nbsp;but since they charge comercial entities for the data, the raw data cannot
+### &nbsp;&nbsp;&nbsp;&nbsp;be shared here.
