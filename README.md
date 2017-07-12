@@ -15,3 +15,5 @@
 ### &nbsp;&nbsp;&nbsp;&nbsp;Note that the data can be provided to students for free by the assessor
 ### &nbsp;&nbsp;&nbsp;&nbsp;but since they charge commercial entities for the data, the raw data cannot
 ### &nbsp;&nbsp;&nbsp;&nbsp;be shared here.
+###
+### Please see other projects at: https://github.com/Vettejeep/Data-Analysis-and-Data-Science-Projects
