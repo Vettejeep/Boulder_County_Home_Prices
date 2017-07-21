@@ -43,7 +43,7 @@ from sklearn.linear_model import Perceptron
 from sklearn.linear_model import HuberRegressor
 from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
 from sklearn.ensemble import GradientBoostingRegressor, AdaBoostRegressor
-import xgboost as xgb
+# import xgboost as xgb
 
 # https://stats.stackexchange.com/questions/58391/mean-absolute-percentage-error-mape-in-scikit-learn
 def mean_absolute_percentage_error(y_true, y_pred):
@@ -70,17 +70,19 @@ def run():
     # 70/30 split of data into training and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=245)
 
-    sc = StandardScaler()
-    sc.fit(X_train)
-    trainX = sc.transform(X_train)
-    testX = sc.transform(X_test)
+    # only needed for some regressors, generally not required by tree methods and
+    # has a minimal effect upon linear regression, use for SVR and MLP
+    # sc = StandardScaler()
+    # sc.fit(X_train)
+    # X_train = sc.transform(X_train)
+    # X_test = sc.transform(X_test)
 
     # comment/uncomment to try different regressors
     reg = LinearRegression()
     # reg = Lasso(alpha=0.01, max_iter=5000)
     # reg = BayesianRidge(n_iter=1000)
-    # reg = SVR()  # poor performance
-    # reg = MLPRegressor(hidden_layer_sizes=(300, 50), activation='logistic', max_iter=20000)  # poor performance
+    # reg = SVR()  # modest performance
+    # reg = MLPRegressor(hidden_layer_sizes=(300, 50), activation='logistic', max_iter=20000)  # slow, OK accuracy
     # reg = Perceptron(n_iter=500)  # crashes
     # reg = HuberRegressor(epsilon=5, max_iter=1000)  # mediocre performance
     # reg = RandomForestRegressor(n_estimators=1000, n_jobs=3, random_state=42)
